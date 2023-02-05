@@ -1,7 +1,10 @@
 import networkx as nx
 
 
-def pruning(T: nx.Graph, terminals):
+def prune(T: nx.Graph, terminals):
+    '''
+    Prunes all leaves nodes that are not terminals.
+    '''
     leaves = set(v for v in T.nodes if T.degree(v) == 1)
     terminals = set(terminals)
     no_terminal_leaves = leaves - terminals
