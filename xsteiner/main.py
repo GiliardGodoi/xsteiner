@@ -5,7 +5,7 @@ from disjointset import DisjointSet
 from .edge import Edge
 
 
-def random_steiner_tree(G: nx.Graph, terminals, how: str = ""):
+def random_spanning_tree(G: nx.Graph, terminals, how: str = ""):
     functions = {
         "prim": random_prim_st,
         "kruskal": random_kruskal_st,
