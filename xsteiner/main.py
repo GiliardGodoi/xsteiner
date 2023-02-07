@@ -30,7 +30,7 @@ def random_prim_st(G: nx.Graph, terminals):
 
     v_star = random.choice(list(nodes))
     for u in G.adj[v_star]:
-        candidates.add(Edge(v_star, u))
+        candidates.add((v_star, u))
 
     nodes.remove(v_star)
     terminals.discard(v_star)
@@ -45,26 +45,27 @@ def random_prim_st(G: nx.Graph, terminals):
                 f"An unexpected error occurred: {n_count} > {n_edges + 2}"
             )
         edge = random.choice(list(candidates))
-        u, v = edge
+        v, u = edge
 
-        if (u in done) and (v in nodes):
+        if (v in done) and (u in nodes):
             P.add_edge(u, v)
-            nodes.remove(v)
-            terminals.discard(v)
-            done.add(v)
-            for w in G.adj[v]:
-                if w != u:
-                    candidates.add(Edge(v, w))
-        elif (v in done) and (u in nodes):
-            P.add_edge(v, u)
             nodes.remove(u)
             terminals.discard(u)
             done.add(u)
-            for w in G.adj[u]:
-                if w != v:
-                    candidates.add(Edge(u, w))
-        else:
-            raise RuntimeError("An unexpected error occurred")
+            for t in G.adj[u]:
+                if t not in done:
+                    candidates.add((u, t))
+        # elif (u in done) and (v in nodes):
+        #     print('is it necessary?')
+        #     P.add_edge(v, u)
+        #     nodes.remove(v)
+        #     terminals.discard(v)
+        #     done.add(v)
+        #     for t in G.adj[v]:
+        #         if t not in done:
+        #             candidates.add((u, t))
+        # else:
+        #     pass # just ignore the edge
         candidates.remove(edge)
 
     return P
