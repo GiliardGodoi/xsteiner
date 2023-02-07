@@ -1,7 +1,7 @@
 import networkx as nx
 
 
-def prune(T: nx.Graph, terminals):
+def pruner(T: nx.Graph, terminals):
     '''
     Prunes all leaves nodes that are not terminals.
     '''
