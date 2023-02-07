@@ -64,19 +64,21 @@ def read(path_file: str):
 
     return G
 
-def write_stp(filename, 
-                T: nx.Graph, 
-                terminals,
-                name= 'default name',
-                creator='xsteiner',
-                remark='Created with xsteiner lib'
-            ):
-    
-    nro_terminals = len(terminals)
-    tx_edges = '\n'.join([f"E {v} {u} {T[v][u].get('weight', 0)}" for v, u in T.edges])
-    tx_terminals = '\n'.join([f"T {t}" for t in terminals])
 
-    template = f'''xxxxxxxx STP File, STP Format Version 1.0
+def write_stp(
+    filename,
+    T: nx.Graph,
+    terminals,
+    name="default name",
+    creator="xsteiner",
+    remark="Created with xsteiner lib",
+):
+
+    nro_terminals = len(terminals)
+    tx_edges = "\n".join([f"E {v} {u} {T[v][u].get('weight', 0)}" for v, u in T.edges])
+    tx_terminals = "\n".join([f"T {t}" for t in terminals])
+
+    template = f"""xxxxxxxx STP File, STP Format Version 1.0
 
 SECTION Comment
 Name    "{name}"
@@ -97,10 +99,9 @@ END
 
 EOF
 
-'''
+"""
 
-    with open(filename, 'w') as file:
+    with open(filename, "w") as file:
         file.write(template)
-    
+
     return True
-    

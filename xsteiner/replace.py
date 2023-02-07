@@ -6,9 +6,9 @@ from .edge import Edge
 
 
 def replace_random_edge(T: nx.Graph, G: nx.Graph):
-    '''
+    """
     Replace a random edge by another random edge.
-    '''
+    """
     control_limit = T.number_of_nodes() + 100
     control_counter = 0
     nodes = list(T.nodes)
