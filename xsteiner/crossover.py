@@ -24,7 +24,7 @@ def mate_prim(T1: nx.Graph, T2: nx.Graph, terminals):
     return T_star
 
 
-def mate_krukal(T1: nx.Graph, T2: nx.Graph, terminals):
+def mate_kruskal(T1: nx.Graph, T2: nx.Graph, terminals):
     G = nx.compose(T1, T2)
     T_star = random_kruskal_st(G, terminals)
     return T_star
