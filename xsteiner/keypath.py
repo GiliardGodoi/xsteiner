@@ -39,7 +39,7 @@ def all_key_paths(T: nx.Graph):
     return paths
 
 
-def random_key_path(T: nx.Graph, terminals, n_edges=3):
+def __random_key_path(T: nx.Graph, terminals, n_edges=3):
     key_nodes = list(v for v in T.nodes if T.degree(v) > 2)
     terminals = set(terminals)
     stack = deque(random.choices(key_nodes, k=1))
@@ -81,7 +81,7 @@ def random_key_path(T: nx.Graph, terminals, n_edges=3):
 
 def replace_random_key_path(T: nx.Graph, G: nx.Graph, terminals, n_edges=3, cutoff=6):
 
-    path = random_key_path(T, terminals, n_edges=n_edges)
+    path = __random_key_path(T, terminals, n_edges=n_edges)
     if len(path) == 0:
         return T
 
