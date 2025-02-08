@@ -6,10 +6,10 @@ import os
 from xsteiner.graph.graph import SteinerGraphProblemInstance
 
 problems_class = {
-        'b' : {'max' : 18},
-        'c' : {'max' : 20},
-        'd' : {'max' : 20},
-        'e' : {'max' : 20},
+        'b' : {'min' : 1, 'max' : 18},
+        'c' : {'min' : 1, 'max' : 20},
+        'd' : {'min' : 1, 'max' : 20},
+        'e' : {'min' : 1, 'max' : 20},
         'others' : ['dv80.txt', 'dv160.txt', 'dv320.txt' ]
     }
 
@@ -117,6 +117,7 @@ def save(content, file_name, folder):
     return True
 
 def generate_all_filenames(key = None):
+    key = key.lower()
     if isinstance(problems_class[key], list) :
         for item in problems_class[key]:
             yield item
