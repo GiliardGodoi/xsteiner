@@ -132,8 +132,6 @@ class SteinerGraphProblemInstance(Graph):
         pass
 
     def update_terminals(self, terminals: Iterable):
-
-        if self.__terminals is not None:
-            RuntimeError('Cannot reasign terminals nodes for an already instatiate steiner graph')
-
+        if not (self.__terminals is None or self.__terminals == set()):
+            raise ValueError('Cannot reasign terminals nodes for an already instatiate steiner graph')
         self.__terminals = set(terminals)
