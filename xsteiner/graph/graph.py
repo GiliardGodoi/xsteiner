@@ -25,7 +25,7 @@ class Graph:
         return True
 
     def adjacents(self, node):
-        if self.has_node(node):
+        if not self.has_node(node):
             raise ValueError(f'Node not in graph: {node}')
         for edge in self.data[node]:
             other = edge.x if node == edge.y else edge.y
@@ -132,6 +132,10 @@ class SteinerGraphProblemInstance(Graph):
         pass
 
     def update_terminals(self, terminals: Iterable):
-        if not (self.__terminals is None or self.__terminals == set()):
+        if self.__terminals is None:
+            if isinstance(terminals, set):
+                self.__terminals = terminals
+            else:
+                self.__terminals = set(terminals)
+        else:
             raise ValueError('Cannot reasign terminals nodes for an already instatiate steiner graph')
-        self.__terminals = set(terminals)
