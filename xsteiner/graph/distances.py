@@ -43,7 +43,7 @@ def shortest_path(graph, source):
             continue
         done.add(u)
         for edge in graph.adjacents_edges(u):
-            v = edge.y if edge.x == u else edge.x
+            v = edge.adj(u)
             new_dist_to_v = dist_u + edge.weight
             # esse if só da False quando: o vertice ja estiver em dist (visitado) e a distancia ja for a menor
             if (not v in dist) or (dist[v] > new_dist_to_v):
