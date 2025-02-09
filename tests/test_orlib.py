@@ -40,6 +40,9 @@ def test_orlib_parser(filepath):
 def test_edges_classes(steiner_graph):
     assert all(isinstance(edge, Edge) for edge in steiner_graph.edges())
 
+def test_sum_of_edges_weight(steiner_graph):
+    assert sum(edge.weight for edge in steiner_graph.edges())
+
 def test_counting_edges(steiner_graph):
     counter = 0
     for _ in steiner_graph.edges(): counter += 1
@@ -57,8 +60,8 @@ def test_counting_terminals(steiner_graph):
 
 def test_update_terminals(steiner_graph):
     assert hasattr(steiner_graph, 'update_terminals')
-    assert type(steiner_graph.terminals) == set
-    assert not (steiner_graph.terminals == {})
+    assert isinstance(steiner_graph.terminals, set)
+    assert not (len(steiner_graph.terminals) == 0)
     with pytest.raises(ValueError):
         steiner_graph.update_terminals(set()) # empty set
     assert steiner_graph.terminals != set()
