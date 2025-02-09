@@ -19,8 +19,7 @@ def filepath():
 
 @pytest.fixture
 def steiner_graph(filepath):
-    graph = orlib_parser(filepath)
-    return graph
+    return orlib_parser(filepath)
 
 def test_dataset_existence(filepath):
     assert os.path.exists(filepath)
@@ -36,27 +35,28 @@ def test_orlib_parser(filepath):
     assert graph.nro_terminals == 13
     assert type(graph.terminals) == set
     assert not (graph.terminals == {})
-    assert hasattr(graph, 'update_terminals')
+
 
 def test_edges_classes(steiner_graph):
     assert all(isinstance(edge, Edge) for edge in steiner_graph.edges())
 
-def test_number_of_edges(steiner_graph):
-    for i, _ in enumerate(steiner_graph.edges(), start=1):
-        pass
-    assert i == steiner_graph.nro_edges
+def test_counting_edges(steiner_graph):
+    counter = 0
+    for _ in steiner_graph.edges(): counter += 1
+    assert steiner_graph.nro_edges == counter
 
-def test_number_of_nodes(steiner_graph):
-    for i, _ in enumerate(steiner_graph.nodes(), start=1):
-        pass
-    assert i == steiner_graph.nro_nodes
+def test_counting_nodes(steiner_graph):
+    counter = 0
+    for _ in steiner_graph.nodes(): counter += 1
+    assert steiner_graph.nro_nodes == counter
 
-def test_number_of_terminal_nodes(steiner_graph):
-    for i, _ in enumerate(steiner_graph.terminals, start=1):
-        pass
-    assert i == steiner_graph.nro_terminals
+def test_counting_terminals(steiner_graph):
+    counter = 0
+    for _ in steiner_graph.terminals: counter += 1
+    assert steiner_graph.nro_terminals == counter
 
 def test_update_terminals(steiner_graph):
+    assert hasattr(steiner_graph, 'update_terminals')
     assert type(steiner_graph.terminals) == set
     assert not (steiner_graph.terminals == {})
     with pytest.raises(ValueError):
