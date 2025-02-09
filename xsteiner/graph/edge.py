@@ -25,7 +25,7 @@ class Edge:
     @property
     def weight(self):
         if self._w is None:
-            raise AttributeError('There is no weight assigned')
+            raise ValueError('There is no weight assigned')
         return self._w
 
     @weight.setter
@@ -49,10 +49,10 @@ class Edge:
         return iter((self._x, self._y))
 
     def __hash__(self):
-        start, end = self._x, self._y
+        start, end, weight = self._x, self._y, self._w
         if hash(end) < hash(start):
             start, end = end, start
-        return hash((self.__class__, start, end))
+        return hash((self.__class__, start, end, weight))
 
     def __str__(self):
         if self._w is None:
@@ -60,4 +60,7 @@ class Edge:
         return f'Edge({self._x}, {self._y}, weight={self._w})'
 
     def __repr__(self):
-        return super().__repr__()
+        return self.__str__()
+
+    def __repr__(self):
+        return self.__str__()
