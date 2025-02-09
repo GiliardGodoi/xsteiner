@@ -30,7 +30,15 @@ class Edge:
 
     @weight.setter
     def weight(self, value):
-        raise AttributeError('Cannot set a new value')
+        raise ValueError('Cannot set a new value')
+
+    def adj(self, node):
+        if node == self.x:
+            return self.y
+        elif node == self.y:
+            return self.x
+        else:
+            raise ValueError(f'Node not found in this edge: {node}')
 
     def __copy__(self):
         return Edge(self._x, self._y, weight=self._w)
@@ -58,9 +66,6 @@ class Edge:
         if self._w is None:
             return f'Edge({self._x}, {self._y})'
         return f'Edge({self._x}, {self._y}, weight={self._w})'
-
-    def __repr__(self):
-        return self.__str__()
 
     def __repr__(self):
         return self.__str__()
