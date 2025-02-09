@@ -31,7 +31,7 @@ def shortest_path(graph, source):
     dist[source] = 0
 
     prev = {source : None}
-    done = dict()
+    done = set()
 
     pqueue = PriorityQueue()
     pqueue.push(0, (0, source))
@@ -41,7 +41,7 @@ def shortest_path(graph, source):
 
         if u in done :
             continue
-        done[u] = True
+        done.add(u)
         for edge in graph.adjacents_edges(u):
             v = edge.y if edge.x == u else edge.x
             new_dist_to_v = dist_u + edge.weight
