@@ -30,7 +30,8 @@ def shortest_path(graph, source):
     dist = defaultdict(lambda : float("inf"))
     dist[source] = 0
 
-    prev = {source : None}
+    prev  = {source : None}
+    edges = {source : None}
     done = set()
 
     pqueue = PriorityQueue()
@@ -48,7 +49,7 @@ def shortest_path(graph, source):
             # esse if só da False quando: o vertice ja estiver em dist (visitado) e a distancia ja for a menor
             if (not v in dist) or (dist[v] > new_dist_to_v):
                 dist[v] = new_dist_to_v
-                prev[v] = u
+                prev[v] = edge
                 pqueue.push(new_dist_to_v,(new_dist_to_v, v))
 
     return dist, prev
