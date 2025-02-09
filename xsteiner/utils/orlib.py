@@ -3,6 +3,7 @@ import re
 import requests
 import os
 
+from xsteiner.graph.edge import Edge
 from xsteiner.graph.graph import SteinerGraphProblemInstance
 
 problems_class = {
@@ -165,8 +166,8 @@ def orlib_parser(filepath):
             u = entries[0]
             v = entries[1]
             weight = entries[2]
-
-            steiner_graph.add_edge(u, v, weight=weight)
+            edge = Edge(u, v, weight=weight)
+            steiner_graph.add_edge(edge)
             counter += 1
 
         # number of vertices to be connected together
