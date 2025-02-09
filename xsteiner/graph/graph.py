@@ -58,7 +58,7 @@ class Graph:
         if len(args) == 1 and isinstance(args[0], Edge):
             edge = args[0]
         elif len(args) == 1:
-            raise TypeError(f'Args is not a Edge type: received {type(args[0])}')
+            raise ValueError(f'Args is not a Edge type: received {type(args[0])}')
         elif len(args) == 2:
             edge = Edge(args[0], args[1], weight=None)
         elif len(args) == 3:
