@@ -6,14 +6,30 @@ class Graph:
     def __init__(self):
         self.data = dict()
 
-    def add_edge(self, x0, x1, weight=None):
-        edge = Edge(x0, x1, weight=weight)
-        if x0 not in self.data:
-            self.add_node(x0)
-        if x1 not in self.data:
-            self.add_node(x1)
-        self.data[x0].add(edge)
-        self.data[x1].add(edge)
+    def add_edge(self, *args):
+        if len(args) == 1 and isinstance(args[0], Edge):
+            edge = args[0]
+        elif len(args) == 1:
+            raise ValueError
+        elif len(args) == 2:
+            x0, x1 = args
+            edge = Edge(x0, x1)
+        elif len(args) == 3 and isinstance(args[2], int):
+            x0, x1, weight = args
+            edge = Edge(x0, x1, weight=weight)
+        else:
+            raise ValueError
+
+        if self.has_edge(edge):
+            raise ValueError
+
+        if not self.has_node(edge.x):
+            self.add_node(edge.x)
+        if not self.has_node(edge.y):
+            self.add_node(edge.y)
+
+        self.data[edge.x].add(edge)
+        self.data[edge.y].add(edge)
         return True
 
     def add_node(self, node):
@@ -49,7 +65,7 @@ class Graph:
         yield from self.data.keys()
 
     def degree(self, node):
-        if self.has_node(node):
+        if not self.has_node(node):
             raise ValueError(f'Node not in graph: {node}')
         return len(self.data[node])
 
