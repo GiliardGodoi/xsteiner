@@ -6,19 +6,11 @@ from xsteiner.graph.edge import Edge
 from xsteiner.utils.steinlib import steinlib_parser, PUC
 
 
-@pytest.fixture
-def filepath():
-    return Path('datasets', 'cc10-2p.stp')
+def test_dataset_existence(steinlib_file):
+    assert os.path.exists(steinlib_file)
 
-@pytest.fixture
-def steiner_graph(filepath):
-    return steinlib_parser(filepath)
-
-def test_dataset_existence(filepath):
-    assert os.path.exists(filepath)
-
-def test_steinlib_parser(filepath):
-    steiner = steinlib_parser(filepath)
+def test_steinlib_parser(steinlib_file):
+    steiner = steinlib_parser(steinlib_file)
     assert isinstance(steiner, SteinerGraphProblemInstance)
     assert steiner.nro_nodes == 1024
     assert steiner.nro_edges == 5120
@@ -33,32 +25,32 @@ def test_path_not_found():
     with pytest.raises(FileNotFoundError):
         steinlib_parser(filepath)
 
-def test_edges_classes(steiner_graph):
-    assert all(isinstance(edge, Edge) for edge in steiner_graph.edges())
+def test_edges_classes(bigger):
+    assert all(isinstance(edge, Edge) for edge in bigger.edges())
 
-def test_sum_of_edges_weight(steiner_graph):
-    assert sum(edge.weight for edge in steiner_graph.edges())
+def test_sum_of_edges_weight(bigger):
+    assert sum(edge.weight for edge in bigger.edges())
 
-def test_counting_edges(steiner_graph):
+def test_counting_edges(bigger):
     counter = 0
-    for _ in steiner_graph.edges(): counter += 1
-    assert steiner_graph.nro_edges == counter
+    for _ in bigger.edges(): counter += 1
+    assert bigger.nro_edges == counter
 
-def test_counting_nodes(steiner_graph):
+def test_counting_nodes(bigger):
     counter = 0
-    for _ in steiner_graph.nodes(): counter += 1
-    assert steiner_graph.nro_nodes == counter
+    for _ in bigger.nodes(): counter += 1
+    assert bigger.nro_nodes == counter
 
-def test_counting_terminals(steiner_graph):
-    assert len(steiner_graph.terminals) == steiner_graph.nro_terminals
+def test_counting_terminals(bigger):
+    assert len(bigger.terminals) == bigger.nro_terminals
 
-def test_update_terminals(steiner_graph):
-    assert hasattr(steiner_graph, 'update_terminals')
-    assert isinstance(steiner_graph.terminals, set)
-    assert not (len(steiner_graph.terminals) == 0)
+def test_update_terminals(bigger):
+    assert hasattr(bigger, 'update_terminals')
+    assert isinstance(bigger.terminals, set)
+    assert not (len(bigger.terminals) == 0)
     with pytest.raises(ValueError):
-        steiner_graph.update_terminals(set()) # empty set
-    assert steiner_graph.terminals != set()
+        bigger.update_terminals(set()) # empty set
+    assert bigger.terminals != set()
 
 def test_puc_problem_instances():
     assert len(PUC) == 50

@@ -8,45 +8,45 @@ from itertools import combinations, product
 
 
 @fixture
-def example():
+def ds_set():
     return DisjointSet()
 
 
-def test_contains_method(example):
+def test_contains_method(ds_set):
 
-    assert not ("A" in example)
+    assert not ("A" in ds_set)
 
-    example.make_set("A")
+    ds_set.make_set("A")
 
-    assert "A" in example
-    assert not (1 in example)
+    assert "A" in ds_set
+    assert not (1 in ds_set)
 
 
-def test_len_method(example):
-    assert len(example) == 0
+def test_len_method(ds_set):
+    assert len(ds_set) == 0
 
     for i in range(100):
-        example.make_set(i)
+        ds_set.make_set(i)
 
-    assert len(example) == 100
+    assert len(ds_set) == 100
 
     i = 0
     for j in range(i + 1, 100):
-        example.union(i, j)
+        ds_set.union(i, j)
         i = j
 
-    assert len(example) == 100
+    assert len(ds_set) == 100
 
 
-def test_bool_method(example):
+def test_bool_method(ds_set):
 
-    assert not bool(example)
+    assert not bool(ds_set)
 
     for i in range(1, 101):  # arbitrary values
-        j = example.make_set(i)
+        j = ds_set.make_set(i)
         assert i == j
 
-    assert bool(example)
+    assert bool(ds_set)
 
 
 @mark.parametrize("number_elements", [100, 10_000, 100_000])
@@ -59,17 +59,17 @@ def test_make_set_method(number_elements):
     assert len(dset) == number_elements
 
 
-def test_insert_an_element_again(example):
+def test_insert_an_element_again(ds_set):
 
     elements = list()
     for i in range(10_000):
         elements.append(i)
-        example.make_set(i)
+        ds_set.make_set(i)
 
     random_elemnt = random.choice(elements)
 
     with pytest.raises(ValueError):
-        example.make_set(random_elemnt)
+        ds_set.make_set(random_elemnt)
 
 
 @mark.parametrize("number_elements", [100, 10_000, 100_000])
@@ -107,15 +107,15 @@ def test_union_method_with_numeric_values(number_elements):
     assert dset.find(25) % 2 == 1
 
 
-def test_union_with_string_values(example):
+def test_union_with_string_values(ds_set):
 
     elements = list()
     for letters in combinations(symbols, 3):
         key = "".join(letters)
-        example.make_set(key)
+        ds_set.make_set(key)
         elements.append(key)
 
-    assert len(example) == len(elements)
+    assert len(ds_set) == len(elements)
 
     random.shuffle(elements)
 
@@ -123,19 +123,19 @@ def test_union_with_string_values(example):
     for a, b in product(elements, repeat=2):
         counter += 1
         if a[0] == b[0]:
-            example.union(a, b)
+            ds_set.union(a, b)
 
-    assert len(example.get_sets()) == (len(symbols) - 2)
+    assert len(ds_set.get_sets()) == (len(symbols) - 2)
 
 
-def test_union_with_tuple_values(example):
+def test_union_with_tuple_values(ds_set):
 
     elements = list()
     for key in combinations(symbols, 3):
-        example.make_set(key)
+        ds_set.make_set(key)
         elements.append(key)
 
-    assert len(example) == len(elements)
+    assert len(ds_set) == len(elements)
 
     random.shuffle(elements)
 
@@ -143,6 +143,6 @@ def test_union_with_tuple_values(example):
     for a, b in product(elements, repeat=2):
         counter += 1
         if a[0] == b[0]:
-            example.union(a, b)
+            ds_set.union(a, b)
 
-    assert len(example.get_sets()) == (len(symbols) - 2)
+    assert len(ds_set.get_sets()) == (len(symbols) - 2)

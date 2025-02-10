@@ -13,22 +13,14 @@ from xsteiner.utils.orlib import (
     orlib_parser
 )
 
-@pytest.fixture
-def filepath():
-    return Path('datasets', 'steinb2.txt')
-
-@pytest.fixture
-def steiner_graph(filepath):
-    return orlib_parser(filepath)
-
-def test_dataset_existence(filepath):
-    assert os.path.exists(filepath)
+def test_dataset_existence(orlib_file):
+    assert os.path.exists(orlib_file)
 
 def test_if_steiner_problem_is_graph():
     assert issubclass(SteinerGraphProblemInstance, Graph)
 
-def test_orlib_parser(filepath):
-    graph = orlib_parser(filepath)
+def test_orlib_parser(orlib_file):
+    graph = orlib_parser(orlib_file)
     assert isinstance(graph, SteinerGraphProblemInstance)
     assert graph.nro_nodes == 50
     assert graph.nro_edges == 63
@@ -37,34 +29,34 @@ def test_orlib_parser(filepath):
     assert not (graph.terminals == {})
 
 
-def test_edges_classes(steiner_graph):
-    assert all(isinstance(edge, Edge) for edge in steiner_graph.edges())
+def test_edges_classes(orlib_graph):
+    assert all(isinstance(edge, Edge) for edge in orlib_graph.edges())
 
-def test_sum_of_edges_weight(steiner_graph):
-    assert sum(edge.weight for edge in steiner_graph.edges())
+def test_sum_of_edges_weight(orlib_graph):
+    assert sum(edge.weight for edge in orlib_graph.edges())
 
-def test_counting_edges(steiner_graph):
+def test_counting_edges(orlib_graph):
     counter = 0
-    for _ in steiner_graph.edges(): counter += 1
-    assert steiner_graph.nro_edges == counter
+    for _ in orlib_graph.edges(): counter += 1
+    assert orlib_graph.nro_edges == counter
 
-def test_counting_nodes(steiner_graph):
+def test_counting_nodes(orlib_graph):
     counter = 0
-    for _ in steiner_graph.nodes(): counter += 1
-    assert steiner_graph.nro_nodes == counter
+    for _ in orlib_graph.nodes(): counter += 1
+    assert orlib_graph.nro_nodes == counter
 
-def test_counting_terminals(steiner_graph):
+def test_counting_terminals(orlib_graph):
     counter = 0
-    for _ in steiner_graph.terminals: counter += 1
-    assert steiner_graph.nro_terminals == counter
+    for _ in orlib_graph.terminals: counter += 1
+    assert orlib_graph.nro_terminals == counter
 
-def test_update_terminals(steiner_graph):
-    assert hasattr(steiner_graph, 'update_terminals')
-    assert isinstance(steiner_graph.terminals, set)
-    assert not (len(steiner_graph.terminals) == 0)
+def test_update_terminals(orlib_graph):
+    assert hasattr(orlib_graph, 'update_terminals')
+    assert isinstance(orlib_graph.terminals, set)
+    assert not (len(orlib_graph.terminals) == 0)
     with pytest.raises(ValueError):
-        steiner_graph.update_terminals(set()) # empty set
-    assert steiner_graph.terminals != set()
+        orlib_graph.update_terminals(set()) # empty set
+    assert orlib_graph.terminals != set()
 
 @pytest.mark.parametrize('problems,key',[
     (STEIN_B, 'B'), (STEIN_C, 'c'), (STEIN_D, 'D'), (STEIN_E, 'e')

@@ -6,25 +6,6 @@ from xsteiner.graph.search import (
     shortest_edge_search
 )
 
-
-@pytest.fixture
-def cyclic():
-    g = Graph()
-    nodes = range(1, 21)
-    for node in nodes:
-        g.add_node(node)
-
-    edges = [
-        (1, 2, 3), (2, 3, 4), (3, 4, 5), (4, 5, 6), (5, 6, 7),
-        (6, 7, 8), (7, 8, 9), (8, 9, 10), (9, 10, 11), (10, 11, 12),
-        (11, 12, 13), (12, 13, 14), (13, 14, 15), (14, 15, 16), (15, 16, 17),
-        (16, 17, 18), (17, 18, 19), (18, 19, 20), (19, 20, 21), (20, 1, 32)
-    ]
-    for edge in edges:
-        g.add_edge(*edge)
-
-    return g
-
 def test_breadth_fisrt_search_on_cyclic_graph(cyclic):
     start = 1
     previous = dict()
