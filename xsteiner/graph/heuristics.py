@@ -1,6 +1,10 @@
 from collections import defaultdict, deque
 from xsteiner.graph.graph import Graph
-from xsteiner.graph.trees import prim_spanning_tree, kruskal_spanning_tree
+from xsteiner.graph.trees import (
+    prim_spanning_tree,
+    kruskal_spanning_tree,
+    boruvka_spanning_tree
+)
 from xsteiner.pqueue.pqueue import PriorityQueue
 from xsteiner.graph.distances import shortest_path
 
@@ -47,7 +51,7 @@ def shortest_path_steiner_tree(graph, start, terminals):
                     for tr in terminals:
                         pqueue.push(distancias[u][tr], (u, tr))
 
-    steiner, cost = pruning_minimum_spanning_tree(steiner, start, terminals)
+    steiner, cost = pruning_prim_minimum_spanning_tree(steiner, start, terminals)
 
     return steiner, cost
 
@@ -90,12 +94,27 @@ def shortest_path_origin_prim(graph : Graph, start, terminals):
                 subgraph.add_edge(edge)
             u = edge.adj(u)
 
-    tree, cost = pruning_minimum_spanning_tree(subgraph, start, terminals)
+    tree, cost = pruning_prim_minimum_spanning_tree(subgraph, start, terminals)
 
     return tree, cost
 
+def pruning_tree(tree: Graph, terminals : set):
 
-def pruning_minimum_spanning_tree(graph, start, terminals):
+    fifo = deque([v
+                  for v in tree.nodes()
+                  if (tree.degree(v) == 1) and (v not in terminals)])
+
+    while fifo:
+        v = fifo.popleft()
+        for w in tree.adjacents(v):
+            if (w not in terminals) and (tree.degree(w) == 2):
+                fifo.append(w)
+        tree.remove_node(v)
+
+    return tree
+
+
+def pruning_prim_minimum_spanning_tree(graph, start, terminals):
     '''
     Parameters:
         graph : Graph
@@ -118,16 +137,7 @@ def pruning_minimum_spanning_tree(graph, start, terminals):
         Resulta sempre na mesma árvore para qualquer vértice <start> considerado.
     '''
     tree = prim_spanning_tree(graph, start)
-    cost = 0
-    leafs = deque([ v
-                    for v in tree.nodes()
-                    if (tree.degree(v) == 1) and (v not in terminals) ])
-    while leafs:
-        node = leafs.popleft()
-        adjacents = [v for v in tree.adjacents(node)]
-        tree.remove_node(node)
-        leafs.extend(v for v in adjacents if (tree.degree(v) == 1) and (v not in terminals))
-
+    tree = pruning_tree(tree, terminals)
     cost = sum(e.weight for e in tree.edges())
     return tree, cost
 
@@ -143,16 +153,13 @@ def pruning_kruskal_minimum_spanning_tree(graph:Graph, terminals):
             Steiner Tree
     """
     tree = kruskal_spanning_tree(graph)
+    tree = pruning_tree(tree, terminals)
+    cost = sum(e.weight for e in tree.edges())
+    return tree, cost
 
-    fifo = deque([v
-                  for v in tree.nodes()
-                  if (tree.degree(v) == 1) and (v not in terminals)])
+def pruning_boruvka_minimum_spanning_tree(graph: Graph, terminals):
 
-    while fifo:
-        v = fifo.popleft()
-        for w in tree.adjacents(v):
-            if (w not in terminals) and (tree.degree(w) == 2):
-                fifo.append(w)
-        tree.remove_node(v)
+    tree = boruvka_spanning_tree(graph)
+    tree = pruning_tree(tree, terminals)
     cost = sum(e.weight for e in tree.edges())
     return tree, cost
