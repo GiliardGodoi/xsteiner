@@ -4,6 +4,7 @@ from xsteiner.graph.distances import (
     shortest_path
 )
 from xsteiner.graph.graph import Graph
+from xsteiner.graph.edge import Edge
 
 @pytest.fixture
 def empty_graph():
@@ -44,8 +45,12 @@ def test_shortest_path_with_medium_graph(medium_graph):
 
     assert prev[5] is None
     assert dist[5] == 0
-    assert prev[1] == 2
+
+    assert isinstance(prev[1], Edge)
+    assert prev[1].adj(1) == 2
     assert dist[1] == 18
-    assert prev[20] == 1
+
+    assert isinstance(prev[20], Edge)
     assert dist[20] == (18 + 32)
+    assert prev[20].adj(20) == 1
 
