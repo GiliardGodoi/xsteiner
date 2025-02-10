@@ -2,6 +2,7 @@
 import re
 import os
 
+from xsteiner.graph.edge import Edge
 from xsteiner.graph.graph import SteinerGraphProblemInstance
 
 # If the number in the Opt column is written in italics
@@ -102,7 +103,8 @@ def steinlib_parser(filepath):
                 assert len(vetor) == 3, "The line must to have three values"
                 v, u, peso = vetor
                 v, u, peso = int(v), int(u), int(peso)
-                graph.add_edge(v, u, weight=peso)
+                edge = Edge(v, u, weight=peso)
+                graph.add_edge(edge)
 
             elif line.startswith("Nodes"):
                 nodes = re.findall(r'Nodes (\d+)$', line)
