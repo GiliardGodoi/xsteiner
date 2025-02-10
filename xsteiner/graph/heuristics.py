@@ -21,7 +21,7 @@ def shortest_path_steiner_tree(graph, start, terminals):
     for t in terminals:
         pqueue.push(distancias[start][t], (start, t))
 
-    subtree = Graph()
+    steiner = Graph()
 
     while pqueue:
         _, (source, target) = pqueue.pop()
@@ -33,23 +33,23 @@ def shortest_path_steiner_tree(graph, start, terminals):
                     pqueue.push(distancias[target][tr], (target, tr))
 
         t = target
-        if not subtree.has_node(target):
+        if not steiner.has_node(target):
             while distancias[source][t]:
-                u = previous[source][t]
-                w = graph[u][t] # obter o peso a partir das arestas do grafo
-                subtree.add_edge(t,u,weight=w) # inserir uma nova aresta sem instanciar um novo objeto
+                # u = previous[source][t]
+                edge = previous[source][t]
+                u = edge.adj(t)
+                steiner.add_edge(edge)
                 t = u
-
                 if u not in distancias:
-                    dist, prev = shortest_path(graph,u)
+                    dist, prev = shortest_path(graph, u)
                     distancias[u] = dist
                     previous[u] = prev
                     for tr in terminals:
                         pqueue.push(distancias[u][tr], (u, tr))
 
-    tree, cost = pruning_minimum_spanning_tree(subtree, start, terminals)
+    steiner, cost = pruning_minimum_spanning_tree(steiner, start, terminals)
 
-    return tree, cost
+    return steiner, cost
 
 
 def shortest_path_with_origin(graph, start, terminals):
@@ -75,33 +75,20 @@ def shortest_path_with_origin(graph, start, terminals):
     return tree, cost
 
 
-def shortest_path_origin_prim(graph, start, terminals):
+def shortest_path_origin_prim(graph : Graph, start, terminals):
     '''
-    Determinar a árvore de caminhos mínimos <T> dos vértices terminais até o nó <start>
-    Define um subgrafo formado pelos vértices presentes em T
-    com as correspondentes arestas do grafo G <graph>.
-    Calcula a MST do subgrafo considerado e realiza a poda da MST.
+    Shortest path heuristic with pruning a Prim MST tree.
     '''
 
     dist, prev = shortest_path(graph, start)
-
-    selectedNodes = set([start])
-
+    subgraph = Graph()
     for t in terminals:
-        selectedNodes.add(t)
         u = t
         while dist[u]:
-            v = prev[u]
-            selectedNodes.add(v)
-            u = v
-
-    subgraph = Graph()
-
-    for v in selectedNodes:
-        for u in graph.adjacent_to(v):
-            if (u in selectedNodes):
-                w = graph.edges[v][u]
-                subgraph.add_edge(v, u, weight=w)
+            edge = prev[u]
+            if not subgraph.has_edge(edge):
+                subgraph.add_edge(edge)
+            u = edge.adj(u)
 
     tree, cost = pruning_minimum_spanning_tree(subgraph, start, terminals)
 
@@ -130,35 +117,22 @@ def pruning_minimum_spanning_tree(graph, start, terminals):
         uma árvore de Steiner.
         Resulta sempre na mesma árvore para qualquer vértice <start> considerado.
     '''
-    dict_tree, _ = prim_spanning_tree(graph, start)
+    tree = prim_spanning_tree(graph, start)
+    cost = 0
+    leafs = deque([ v
+                    for v in tree.nodes()
+                    if (tree.degree(v) == 1) and (v not in terminals) ])
+    while leafs:
+        node = leafs.popleft()
+        adjacents = [v for v in tree.adjacents(node)]
+        tree.remove_node(node)
+        leafs.extend(v for v in adjacents if (tree.degree(v) == 1) and (v not in terminals))
 
-    pruned = Graph()
-
-    total = 0
-
-    for terminal in terminals:
-        current = terminal
-        while current != start:
-            previous = dict_tree[current]
-            if pruned.has_edge(current, previous):
-                current = start
-            else :
-                weight = graph.weight(current, previous)
-                pruned.add_edge(current, previous, weight=weight)
-                total += weight
-                current = previous
-
-    current = start
-    while (current not in terminals) and (pruned.degree(current) == 1):
-        previous = list(pruned.adjacent_to(current)).pop()
-        total -= pruned.weight(current, previous)
-        pruned.remove_node(current)
-        current = previous
-
-    return pruned, total
+    cost = sum(e.weight for e in tree.edges())
+    return tree, cost
 
 
-def pruning_kruskal_minimum_spanning_tree(graph : Graph, terminals):
+def pruning_kruskal_minimum_spanning_tree(graph:Graph, terminals):
     """
     Parameters:
         graph : Graph
@@ -168,16 +142,17 @@ def pruning_kruskal_minimum_spanning_tree(graph : Graph, terminals):
         child : Graph
             Steiner Tree
     """
-    child = kruskal_spanning_tree(graph)
+    tree = kruskal_spanning_tree(graph)
 
-    fifo = deque([v for v in child.vertices if (v not in terminals) and (child.degree(v) == 1)])
+    fifo = deque([v
+                  for v in tree.nodes()
+                  if (tree.degree(v) == 1) and (v not in terminals)])
 
     while fifo:
-        v = fifo.pop()
-        for w in child.adjacent_to(v):
-            if (w not in terminals) and (child.degree(w) == 2): # or child.degree(w) - 1 == 1 #
-                fifo.appendleft(w)
-
-        child.remove_node(v)
-
-    return child
+        v = fifo.popleft()
+        for w in tree.adjacents(v):
+            if (w not in terminals) and (tree.degree(w) == 2):
+                fifo.append(w)
+        tree.remove_node(v)
+    cost = sum(e.weight for e in tree.edges())
+    return tree, cost
