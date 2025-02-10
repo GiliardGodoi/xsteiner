@@ -56,6 +56,9 @@ def test_prim_mst_on_bigger_graph(bigger):
     result = [tree.has_edge(i,j) for i, j in shortest_edge_search(bigger, 5)]
     assert all(result), 'Vai falhar aqui!'
 
+@pytest.mark.skip
+def test_prim_mst_share_edges(cyclic):
+    raise False
 
 def test_kruskal_spanning_tree_on_cyclic_graph(cyclic):
 
