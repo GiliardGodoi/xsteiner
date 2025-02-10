@@ -24,23 +24,22 @@ def prim_spanning_tree(graph : Graph, source):
     visited = set()
     queue = PriorityQueue()
     best_weight = dict()
-    queue.push(0, (source, None))
+    queue.push(0, (source, None, None))
 
     while queue:
-        weight, (node, prev) = queue.pop()
+        _, (node, prev, edge) = queue.pop()
         if node in visited:
             continue
         visited.add(node)
-
         if prev is not None:
-            tree.add_edge(node, prev, weight)
+            tree.add_edge(edge)
 
         for edge in graph.adjacents_edges(node):
-            adj = edge.y if edge.x == node else edge.x
+            adj = edge.adj(node)
             if adj not in visited:
                 if (adj not in best_weight) or (edge.weight < best_weight[adj]):
                     best_weight[adj] = edge.weight
-                    queue.push(edge.weight, (adj, node))
+                    queue.push(edge.weight, (adj, node, edge))
     return tree
 
 
