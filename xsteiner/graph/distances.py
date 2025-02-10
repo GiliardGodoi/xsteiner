@@ -31,7 +31,6 @@ def shortest_path(graph, source):
     dist[source] = 0
 
     prev  = {source : None}
-    edges = {source : None}
     done = set()
 
     pqueue = PriorityQueue()
