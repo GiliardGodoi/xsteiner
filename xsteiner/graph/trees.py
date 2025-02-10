@@ -54,15 +54,56 @@ def kruskal_spanning_tree(graph : Graph):
     '''
     ds = DisjointSet()
     tree = Graph()
+    nro_nodes = 0
     for v in graph.nodes():
         ds.make_set(v)
+        nro_nodes += 1
 
     edges = [e for e in graph.edges()]
     edges = sorted(edges, key=lambda e: e.weight)
-
+    nro_tree_edges = 0
     for edge in edges:
         v, u = edge
         if ds.find(v) != ds.find(u):
-            tree.add_edge(v, u, edge.weight)
-            ds.union(v,u)
+            tree.add_edge(edge)
+            ds.union(v, u)
+            nro_tree_edges += 1
+            if nro_tree_edges == (nro_nodes - 1):
+                break
+    return tree
+
+def boruvka_spanning_tree(graph : Graph):
+    ds = DisjointSet()
+    nro_components = 0
+    for v in graph.nodes():
+        ds.make_set(v)
+        nro_components += 1
+    edges = {e for e in graph.edges()}
+    tree = Graph()
+    while nro_components > 1:
+        cheapest = dict()
+        done = set()
+        for edge in edges:
+            u, v = edge
+            comp_u = ds.find(u)
+            comp_v = ds.find(v)
+            if comp_u == comp_v:
+                done.add(edge)
+                continue
+            if comp_u not in cheapest or cheapest[comp_u].weight > edge.weight:
+                cheapest[comp_u] = edge
+            if comp_v not in cheapest or cheapest[comp_v].weight > edge.weight:
+                cheapest[comp_v] = edge
+
+        for comp, edge in cheapest.items():
+            u, v = edge
+            comp_u = ds.find(u)
+            comp_v = ds.find(v)
+            if comp_u == comp_v:
+                continue
+            ds.union(v, u)
+            tree.add_edge(edge)
+            nro_components -= 1
+        edges = edges - done
+
     return tree
