@@ -51,4 +51,15 @@ def prim_random_spanning_tree(steiner:SteinerGraphProblemInstance, prune=True):
     return tree
 
 
+def random_walk_spanning_tree(steiner:SteinerGraphProblemInstance):
+    tree = Graph()
+    terminals = steiner.terminals.copy()
+    v = terminals.pop()
+    while terminals:
+        edge = sample([e for e in steiner.adjacents_edges(v)], k=1)[0]
+        if not tree.has_edge(edge):
+            tree.add_edge(edge)
+            terminals.discard(v)
+        v = edge.adj(v)
 
+    return tree
