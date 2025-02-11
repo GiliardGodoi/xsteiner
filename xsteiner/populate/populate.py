@@ -57,9 +57,10 @@ def random_walk_spanning_tree(steiner:SteinerGraphProblemInstance):
     v = terminals.pop()
     while terminals:
         edge = sample([e for e in steiner.adjacents_edges(v)], k=1)[0]
-        if not tree.has_edge(edge):
+        u = edge.adj(v)
+        if not tree.has_node(u):
             tree.add_edge(edge)
-            terminals.discard(v)
-        v = edge.adj(v)
+            terminals.discard(u)
+        v = u
 
     return tree
