@@ -1,7 +1,7 @@
 import pytest
 from xsteiner.graph.graph import Graph
 from xsteiner.graph.edge import Edge
-from xsteiner.graph.trees import (
+from xsteiner.graph.trees.minimum_spanning import (
     prim_spanning_tree,
     kruskal_spanning_tree,
     boruvka_spanning_tree,
