@@ -123,7 +123,8 @@ class Graph:
         self.data[edge.x].remove(edge)
         self.data[edge.y].remove(edge)
 
-    def n_nodes(self):
+    @property
+    def nro_vertices(self):
         return len(self.data)
 
 class SteinerGraphProblemInstance(Graph):

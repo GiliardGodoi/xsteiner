@@ -1,13 +1,13 @@
 from collections import defaultdict, deque
+from xsteiner.graph.distances import shortest_path
 from xsteiner.graph.graph import Graph
-from xsteiner.graph.trees import (
+from xsteiner.pqueue.pqueue import PriorityQueue
+from xsteiner.graph.operators import pruning_tree
+from xsteiner.graph.trees.minimum_spanning import (
     prim_spanning_tree,
     kruskal_spanning_tree,
     boruvka_spanning_tree
 )
-from xsteiner.pqueue.pqueue import PriorityQueue
-from xsteiner.graph.distances import shortest_path
-
 
 
 def shortest_path_steiner_tree(graph, start, terminals):
@@ -97,22 +97,6 @@ def shortest_path_origin_prim(graph : Graph, start, terminals):
     tree, cost = pruning_prim_minimum_spanning_tree(subgraph, start, terminals)
 
     return tree, cost
-
-def pruning_tree(tree: Graph, terminals : set):
-
-    fifo = deque([v
-                  for v in tree.nodes()
-                  if (tree.degree(v) == 1) and (v not in terminals)])
-
-    while fifo:
-        v = fifo.popleft()
-        for w in tree.adjacents(v):
-            if (w not in terminals) and (tree.degree(w) == 2):
-                fifo.append(w)
-        tree.remove_node(v)
-
-    return tree
-
 
 def pruning_prim_minimum_spanning_tree(graph, start, terminals):
     '''

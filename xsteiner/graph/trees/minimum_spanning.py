@@ -100,6 +100,7 @@ def boruvka_spanning_tree(graph : Graph):
             comp_u = ds.find(u)
             comp_v = ds.find(v)
             if comp_u == comp_v:
+                done.add(edge)
                 continue
             ds.union(v, u)
             tree.add_edge(edge)
