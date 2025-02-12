@@ -69,6 +69,6 @@ def test_pruning_kruskal_minimum_spanning_tree(orlib_graph:SteinerGraphProblemIn
 
 def test_pruning_tree(bigger:SteinerGraphProblemInstance):
 
-    tree = pruning_tree(bigger, 5, bigger.terminals)
+    tree = pruning_tree(bigger, bigger.terminals)
 
     assert all(tree.has_node(t) for t in bigger.terminals)
