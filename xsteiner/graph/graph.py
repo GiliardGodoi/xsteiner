@@ -150,9 +150,9 @@ class SteinerGraphProblemInstance(Graph):
 
     def update_terminals(self, terminals: Iterable):
         if self.__terminals is None:
-            if isinstance(terminals, set):
+            if isinstance(terminals, frozenset):
                 self.__terminals = terminals
             else:
-                self.__terminals = set(terminals)
+                self.__terminals = frozenset(terminals)
         else:
             raise ValueError('Cannot reasign terminals nodes for an already instatiate steiner graph')
