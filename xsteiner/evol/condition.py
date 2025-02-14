@@ -1,9 +1,8 @@
 from evol.conditions import Condition
 from evol.exceptions import StopEvolution
-from ga4stpg.graph import SteinerTreeProblem
-from ga4stpg.graph.util import is_steiner_tree
-
-from .customevol import GeneticPopulation as Population
+from xsteiner.graph.graph import SteinerGraphProblemInstance
+from xsteiner.evol.custom import SteinerPopulation as Population
+from xsteiner.graph.operators import is_steiner_tree
 
 class IterationLimit(Condition):
 
@@ -43,7 +42,7 @@ class BestSteinerTreeReachead(Condition):
 
     def __init__(self,
                  global_optimum : int,
-                 STPG : SteinerTreeProblem,
+                 STPG : SteinerGraphProblemInstance,
                  decoder=None):
 
         self.global_optimum = global_optimum
@@ -66,7 +65,7 @@ class BestSteinerTreeReachead(Condition):
             else:
                 steiner_tree = best_solution.chromosome
 
-            result, _ = is_steiner_tree(steiner_tree, self.STPG)
+            result = is_steiner_tree(steiner_tree, self.STPG)
 
             if result :
                 raise StopEvolution("BestKnownSteinerTreeReached")
