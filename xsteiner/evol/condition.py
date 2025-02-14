@@ -1,7 +1,7 @@
 from evol.conditions import Condition
 from evol.exceptions import StopEvolution
 from xsteiner.graph.graph import SteinerGraphProblemInstance
-from xsteiner.evol.custom import SteinerPopulation as Population
+from xsteiner.evol.custom import CustomPopulation as Population
 from xsteiner.graph.operators import is_steiner_tree
 
 class IterationLimit(Condition):
