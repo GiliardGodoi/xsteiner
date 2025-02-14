@@ -108,10 +108,10 @@ class RandomWalkRSPPopulation:
         """
         stpg = self.stpg
         tree = Graph()
-        special_nodes = self.terminals.copy()
+        special_nodes = set(self.terminals)
         v = special_nodes.pop()
         while special_nodes:
-            edge = choice([e for e in stpg.adjacents_edges(v)], k=1)
+            edge = choice([e for e in stpg.adjacents_edges(v)])
             u = edge.adj(v)
             if not tree.has_node(u):
                 tree.add_edge(edge)

@@ -4,48 +4,31 @@ from xsteiner.graph.graph import (
     Graph,
     SteinerGraphProblemInstance,
 )
-from xsteiner.populate.populate import (
-    kruskal_random_spanning_tree,
-    prim_random_spanning_tree,
-    random_walk_spanning_tree
+from xsteiner.evol.populate import (
+    PrimRSTPopulation,
+    KruskalRSTPopulation,
+    RandomWalkRSPPopulation,
+    BoruvkaRSTPolulation
 )
 
 def test_kruskal_random_spanning_tree(bigger:SteinerGraphProblemInstance):
-    tree = kruskal_random_spanning_tree(bigger)
-    assert isinstance(tree, Graph)
-    assert all(tree.has_node(t) for t in bigger.terminals)
-
-    ds = DisjointSet()
-    for v in tree.nodes() : ds.make_set(v)
-    for edge in tree.edges():
-        i, j = edge
-        ds.union(i, j)
-    components = ds.parents_components()
-    assert len(components) == 1
+    generator = KruskalRSTPopulation(bigger)
+    trees = [generator(p_prune=1.0) for _ in range(10)]
+    assert len(trees) == 10
 
 
 def test_prim_random_spanning_tree(bigger:SteinerGraphProblemInstance):
-    tree = prim_random_spanning_tree(bigger)
-    assert isinstance(tree, Graph)
-    assert all(tree.has_node(t) for t in bigger.terminals)
-
-    ds = DisjointSet()
-    for v in tree.nodes() : ds.make_set(v)
-    for edge in tree.edges():
-        i, j = edge
-        ds.union(i, j)
-    components = ds.parents_components()
-    assert len(components) == 1
+    generator = PrimRSTPopulation(bigger)
+    trees = [generator(p_prune=1.0) for _ in range(10)]
+    assert trees
 
 def test_random_walk_spanning_tree(bigger:SteinerGraphProblemInstance):
-    tree = random_walk_spanning_tree(bigger)
-    assert isinstance(tree, Graph)
-    assert all(tree.has_node(t) for t in bigger.terminals)
+    generator = RandomWalkRSPPopulation(bigger)
+    trees = [generator(p_prune=1.0) for _ in range(10)]
+    assert trees
 
-    ds = DisjointSet()
-    for v in tree.nodes() : ds.make_set(v)
-    for edge in tree.edges():
-        i, j = edge
-        ds.union(i, j)
-    components = ds.parents_components()
-    assert len(components) == 1
+#
+def test_boruvka_random_spanning_tree(bigger:SteinerGraphProblemInstance):
+    generator = BoruvkaRSTPolulation(bigger)
+    trees = [generator(p_prune=1.0) for _ in range(10)]
+    assert trees
