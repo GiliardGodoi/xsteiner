@@ -65,7 +65,7 @@ class CustomPopulation(BasePopulation):
                  checkpoint_target: Optional[str] = None,
                  serializer=None,
                  concurrent_workers: Optional[int] = 1):
-        super().__init__(chromosomes=chromosomes,
+        super().__init__(chromosomes=[],
                          eval_function=eval_function,
                          checkpoint_target=checkpoint_target,
                          concurrent_workers=concurrent_workers,
@@ -73,6 +73,8 @@ class CustomPopulation(BasePopulation):
                          generation=generation,
                          intended_size=intended_size,
                          serializer=serializer)
+
+        self.individuals = [Individual(chromosome=chromosome) for chromosome in chromosomes]
 
     def __copy__(self):
         result = self.__class__(chromosomes=[],
