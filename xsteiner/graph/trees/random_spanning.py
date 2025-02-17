@@ -1,4 +1,5 @@
-from random import shuffle, sample, choice, randrange
+from collections import defaultdict
+from random import shuffle, random, choice, randrange
 from xsteiner.disjointset.disjointset import DisjointSet
 from xsteiner.graph.graph import Graph
 
@@ -61,26 +62,28 @@ def boruvka_random_spanning_tree(graph:Graph):
     for v in graph.nodes():
         ds.make_set(v)
         nro_components += 1
-    edges = list(graph.edges())
-    shuffle(edges)
-    edges = set(edges)
+    edges = set(graph.edges())
     tree = Graph()
     while nro_components > 1:
-        selected = dict()
+        cheapest = defaultdict(dict)
         done = set()
         for edge in edges:
-            u, v = edge
-            comp_u = ds.find(u)
-            comp_v = ds.find(v)
+            if tree.has_edge(edge):
+                continue
+            comp_u = ds.find(edge.x)
+            comp_v = ds.find(edge.y)
             if comp_u == comp_v:
                 done.add(edge)
                 continue
-            if comp_u not in selected :
-                selected[comp_u] = edge
-            if comp_v not in selected :
-                selected[comp_v] = edge
+            if comp_u not in cheapest or cheapest[comp_u]['weight'] > random():
+                cheapest[comp_u]['edge'] = edge
+                cheapest[comp_u]['weight'] = random()
+            if comp_v not in cheapest or cheapest[comp_v]['weight'] > random():
+                cheapest[comp_v]['edge'] = edge
+                cheapest[comp_v]['weight'] = random()
 
-        for _, edge in selected.items():
+        for comp in cheapest.values():
+            edge = comp['edge']
             u, v = edge
             comp_u = ds.find(u)
             comp_v = ds.find(v)
@@ -90,6 +93,6 @@ def boruvka_random_spanning_tree(graph:Graph):
             ds.union(v, u)
             tree.add_edge(edge)
             nro_components -= 1
-        edges = edges - done
+        # edges = edges - done
 
     return tree
