@@ -18,7 +18,7 @@ def custom_offspring_generator( parents: List[Individual],
                                 parent_picker: Callable[..., Union[Individual, Sequence]],
                                 combiner: Callable[..., Any],
                                 **kwargs
-                            ) -> Generator[Individual]:
+                            ) -> Generator[Individual, None, None]:
 
     while True:
         selected_parents = parent_picker(parents, **kwargs)
