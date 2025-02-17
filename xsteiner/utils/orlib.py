@@ -5,6 +5,9 @@ import os
 
 from xsteiner.graph.edge import Edge
 from xsteiner.graph.graph import SteinerGraphProblemInstance
+from xsteiner.utils.download import download, save, check_url_validity
+
+ORLIB_URL = 'http://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/'
 
 problems_class = {
         'b' : {'min' : 1, 'max' : 18},
@@ -105,18 +108,6 @@ STEIN_E = [
     ("steine20.txt", 1342),
 ]
 
-def download(file_name):
-    url = f'http://people.brunel.ac.uk/~mastjjb/jeb/orlib/files/{file_name}'
-    response = requests.get(url)
-    data = response.content
-    return data
-
-def save(content, file_name, folder):
-    local = os.path.join(folder, file_name)
-    with open(local, "wb") as file:
-        file.write(content)
-    return True
-
 def generate_all_filenames(key = None):
     key = key.lower()
     if isinstance(problems_class[key], list) :
@@ -195,9 +186,10 @@ def orlib_parser(filepath):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Download dataset from ORLibrary")
-    parser.add_argument('-d', '--datafolder', type=str, required=True, help="Folder to save or parse data")
-    parser.add_argument('-b', '--basename', type=str, required=True, help="Base name of the file (b, c, d, e, others)")
+    parser.add_argument('-d', '--datafolder', type=str, required=False, help="Folder to save or parse data")
+    parser.add_argument('-b', '--basename', type=str, required=False, help="Base name of the file (b, c, d, e, others)")
     parser.add_argument('-n', '--number', type=int, help="Number of the file (only for types b, c, d, e)")
+
     args = parser.parse_args()
 
     INPUT_FOLDER = os.path.join(args.datafolder)
@@ -207,18 +199,19 @@ if __name__ == "__main__":
 
     if args.basename == 'others':
         for file_name in generate_all_filenames(args.basename):
-            data = download(file_name)
+            data = download(ORLIB_URL + file_name)
             save(data, file_name, INPUT_FOLDER)
+
     elif args.basename in problems_class and args.number:
         file_name = f"stein{args.basename}{args.number}.txt"
-        data = download(file_name)
+        url = ORLIB_URL + file_name
+        data = download(url)
         save(data, file_name, INPUT_FOLDER)
 
     elif args.basename in problems_class:
         for file_name in generate_all_filenames(args.basename):
-            data = download(file_name)
+            data = download(ORLIB_URL + file_name)
             save(data, file_name, INPUT_FOLDER)
+
     else:
         print(f"Invalid basename: {args.basename}")
-
-

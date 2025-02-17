@@ -1,9 +1,12 @@
 
 import re
+import requests
 import os
-
+from pathlib import Path
 from xsteiner.graph.edge import Edge
 from xsteiner.graph.graph import SteinerGraphProblemInstance
+
+BASE_URL = f'https://steinlib.zib.de/download/'
 
 # If the number in the Opt column is written in italics
 # the optimum is not known.
@@ -63,12 +66,60 @@ PUC = [
     ("hc9u.stp", 292)
 ]
 
-'''
-    This class parses the Steiner Tree Problem instance's file and fill the Steiner Tree Problem class above.
+FILES = [
+    "B.tgz",
+    "C.tgz",
+    "D.tgz",
+    "E.tgz",
+    "MC.tgz",
+    "X.tgz",
+    "SP.tgz",
+    "PUC.tgz",
+    "I080.tgz",
+    "I160.tgz",
+    "I320.tgz",
+    "I640.tgz",
+    "1R.tgz",
+    "2R.tgz",
+    "P4E.tgz",
+    "P4Z.tgz",
+    "P6E.tgz",
+    "P6Z.tgz",
+    "ALUE.tgz",
+    "ALUT.tgz",
+    "DIW.tgz",
+    "DMXA.tgz",
+    "GAP.tgz",
+    "MSM.tgz",
+    "TAQ.tgz",
+    "LIN.tgz",
+    "ES10FST.tgz",
+    "ES20FST.tgz",
+    "ES30FST.tgz",
+    "ES40FST.tgz",
+    "ES50FST.tgz",
+    "ES60FST.tgz",
+    "ES70FST.tgz",
+    "ES80FST.tgz",
+    "ES90FST.tgz",
+    "ES100FST.tgz",
+    "ES250FST.tgz",
+    "ES500FST.tgz",
+    "ES1000FST.tgz",
+    "ES10000FST.tgz",
+    "TSPFST.tgz",
+    "GENE.tgz",
+    "WRP3.tgz",
+    "WRP4.tgz",
+    "relay-large-1.7z",
+    "relay-large-2.7z",
+    "relay-large-3.7z",
+    "relay-medium.7z",
+    "relay-small.7z",
+    "Relay-Complete.tar.bz2",
+    "SteinLibEFST.zip"
+]
 
-    Based on Bruna Osti's propose
-    from: <https://github.com/brunaostii/Steiner_Tree>
-'''
 
 def steinlib_parser(filepath):
 
@@ -156,3 +207,7 @@ def steinlib_parser(filepath):
                 break
 
     return steiner
+
+
+if __name__ == "__main__":
+    ...
