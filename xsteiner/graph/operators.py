@@ -76,7 +76,7 @@ def check_cycle_dfs(graph:Graph, start):
 
 def check_cycle_union_find(graph:Graph):
     ds = DisjointSet()
-    for v in graph.vertices: ds.make_set(v)
+    for v in graph.nodes(): ds.make_set(v)
     for edge in graph.edges():
         comp_x = ds.find(edge.x)
         comp_y = ds.find(edge.y)
