@@ -15,7 +15,7 @@ def check_url_validity(url):
 def download(url):
 
     response = requests.get(url)
-    if response.status_code == requests.status_codes['ok']:
+    if response.status_code == requests.status_codes.codes['ok']:
         data = response.content
         return data
     else:
